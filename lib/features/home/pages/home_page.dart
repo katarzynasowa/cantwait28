@@ -1,6 +1,7 @@
 import 'package:cantwait28/features/add/page/add_page.dart';
 import 'package:cantwait28/features/home/cubit/home_cubit.dart';
 import 'package:cantwait28/models/item_model.dart';
+import 'package:cantwait28/repositories/items_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -39,7 +40,7 @@ class _HomePageBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => HomeCubit()..start(),
+      create: (context) => HomeCubit(ItemsRepository())..start(),
       child: BlocBuilder<HomeCubit, HomeState>(
         builder: (context, state) {
           final itemModels = state.items;
@@ -77,7 +78,6 @@ class _HomePageBody extends StatelessWidget {
                   },
                   child: _ListViewItem(
                     itemModel: itemModel,
-                    document: itemModel,
                   ),
                 ),
             ],
@@ -89,21 +89,15 @@ class _HomePageBody extends StatelessWidget {
 }
 
 class _ListViewItem extends StatelessWidget {
-  // ignore: prefer_typing_uninitialized_variables
-  var itemModel;
-
-  _ListViewItem({
+  const _ListViewItem({
     Key? key,
     required this.itemModel,
-    required this.document,
   }) : super(key: key);
 
-  final ItemModel document;
+  final ItemModel itemModel;
 
   @override
   Widget build(BuildContext context) {
-    // ignore: prefer_typing_uninitialized_variables
-    var itemModel;
     return Padding(
       padding: const EdgeInsets.symmetric(
         vertical: 10,
@@ -158,15 +152,15 @@ class _ListViewItem extends StatelessWidget {
                   margin: const EdgeInsets.all(10),
                   padding: const EdgeInsets.all(10),
                   child: Column(
-                    children: const [
+                    children: [
                       Text(
-                        '0',
-                        style: TextStyle(
+                        itemModel.daysLeft(),
+                        style: const TextStyle(
                           fontSize: 20.0,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      Text('days left'),
+                      const Text('days left'),
                     ],
                   ),
                 ),
